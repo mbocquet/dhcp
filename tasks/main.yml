@@ -1,0 +1,47 @@
+---
+# tasks file for dhcp
+- name: "Packages"
+  package:
+    name: "{{ item }}"
+  with_items:
+    - "{{ dhcp_packages }}"
+  tags:
+    - dhcp
+    - packages
+
+#- name: "Debug 1"
+#  debug:
+#    msg: "{{ item }}"
+#  with_items:
+#    - "{{ dhcp_packages }}"
+#    - "{{ dhcp_domain }}"
+#    - "{{ dhcp_subnets }}"
+#    - "{{ dhcp_interfaces | default('ansible_default_ipv4['interface']') }}"
+##    - "{{ ansible_default_ipv4['interface'] }}"
+#  tags:
+#    - dhcp
+#    - debug
+
+#- name: "Debug"
+#  debug:
+#    msg: "{{ dhcp_interfaces | default(ansible_default_ipv4['interface']) }}"
+#  tags:
+#    - dhcp
+#    - debug
+
+- name: "Listening interface(s)"
+  lineinfile:
+    dest: '{{ dhcp_default_file }}'
+    line: "INTERFACESv4=\"{{ dhcp_interfaces | default(ansible_default_ipv4['interface']) }}\""
+  tags:
+    - dhcp
+    - interfaces
+
+- name: "Config file"
+  template:
+    dest: '/tmp/dhcpd.conf.test'
+    src: 'dhcpd-standalone.conf.j2'
+  tags:
+    - dhcp
+    - config
+...

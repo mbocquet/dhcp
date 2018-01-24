@@ -1,0 +1,41 @@
+---
+# defaults file for dhcp
+dhcp_packages:
+  - 'isc-dhcp-server'
+
+dhcp_default_file: '/etc/default/isc-dhcp-server'
+
+# defaults to ansible_default_ipv4['interface'] if undefined
+# dhcp_interfaces:
+#   - 'eth0'
+
+dhcp_authoritative: 'yes'
+
+dhcp_domain:
+  - 'mydomain.local'
+
+dhcp_ns:
+  - 'ns1'
+  - 'ns2' 
+
+# dhcp_domainsearch: ''
+
+# dhcp_subnets:
+#   - network: '192.168.1.0'
+#     netmask: '255.255.255.0'
+#     broadcast: '192.168.1.255'
+#     routers: '192.168.1.254'
+#     range: '192.168.1.10 192.168.1.253'
+#     default_lease_time: '600'
+#     max_lease_time: '7200'
+#   - network: '192.168.1.0'
+#     netmask: '255.255.255.0'
+#     broadcast: '192.168.1.255'
+#     routers: '192.168.1.254'
+#     range: '192.168.1.10 192.168.1.253'
+#     default_lease_time: '600'
+#     max_lease_time: '7200'
+
+# dhcp_role: 'standalone|primary|secondary'
+dhcp_role: 'standalone'
+...

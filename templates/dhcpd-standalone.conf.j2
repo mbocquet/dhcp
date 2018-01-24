@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+ddns-update-style none;
+authoritative;
+
+{% for item in dhcp_subnets %}
+subnet {{ item.network }} netmask {{ item.netmask }} {
+  range {{ item.range }}
+  option domain-name-servers {{ dhcp_ns }}
+}
+
+{% endfor %}

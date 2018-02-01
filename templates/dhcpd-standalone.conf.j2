@@ -1,12 +1,50 @@
 # {{ ansible_managed }}
 
-ddns-update-style none;
-authoritative;
+{% if dhcp_common_domain is defined %}
+option domain-name "{{ dhcp_common_domain }}";
+{% endif %}
+{% if dhcp_common_domain_search is defined %}
+option domain-search "{{ dhcp_common_domain_search|join('", "') }}";
+{% endif %}
+{% if dhcp_common_nameservers is defined %}
+option domain-name-servers {{ dhcp_common_nameservers|join(', ') }};
+{% endif %}
 
-{% for item in dhcp_subnets %}
-subnet {{ item.network }} netmask {{ item.netmask }} {
-  range {{ item.range }}
-  option domain-name-servers {{ dhcp_ns }}
+{% if dhcp_common_default_lease_time is defined %}
+default-lease-time {{ dhcp_common_default_lease_time }};
+{% endif %}
+{% if dhcp_common_max_lease_time is defined %}
+max-lease-time {{ dhcp_common_max_lease_time }};
+{% endif %}
+
+ddns-update-style {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
+{{ dhcp_ddns_update_style|lower() }}
+{% else %}none{% endif %};
+{% if dhcp_autoritative is defined and dhcp_autoritative|lower() in ['true','yes'] %}
+authoritative;
+{% endif %}
+
+{% for subnet in dhcp_subnets %}
+# {{ subnet.name }}
+subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
+ range {{ subnet.range }};
+{% if subnet.nameservers is defined %}
+ option domain-name-servers "{{ subnet.nameservers|join('", "') }}";
+{% endif %}
+{% if subnet.domain_name is defined %}
+ option domain-name "{{ subnet.domain_name }}";
+{% endif %}
+{% if subnet.domain_search is defined %}
+ option domain-search "{{ subnet.domain_search|join('", "') }}";
+{% endif %}
+ option routers {{ subnet.routers }};
+ option broadcast-address {{ subnet.broadcast }};
+{% if subnet.default_lease_time is defined %}
+ default-lease-time {{ subnet.default_lease_time }};
+{% endif %}
+{% if subnet.max_lease_time is defined %}
+ max-lease-time {{ subnet.max_lease_time }};
+{% endif %}
 }
 
 {% endfor %}

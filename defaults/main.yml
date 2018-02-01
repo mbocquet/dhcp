@@ -9,32 +9,60 @@ dhcp_default_file: '/etc/default/isc-dhcp-server'
 # dhcp_interfaces:
 #   - 'eth0'
 
-dhcp_authoritative: 'yes'
+# dhcp_ddns_update_style: 'none|interim'
+# default to none if undefined
+# dhcp_ddns_update_style: 'interim'
 
-dhcp_domain:
-  - 'mydomain.local'
+# dhcp_authoritative: 'yes|no|true|false' (case insensitive)
+# default to not print this statement if value is not in 'true','false' or undefined
+# dhcp_authoritative: 'true'
 
-dhcp_ns:
-  - 'ns1'
-  - 'ns2' 
+# dhcp_common_domain: 'mydomain.local'
 
-# dhcp_domainsearch: ''
+# dhcp_common_default_lease_time: '600'
+# dhcp_common_max_lease_time: '7200'
+
+# IP Addresses, not FQDNs of common nameservers
+# dhcp_common_nameservers:
+#   - '10.0.0.1'
+#   - '172.16.0.1' 
+
+# dhcp_common_domainsearch:
+#   - 'mydomain.local'
+#   - 'myotherdomain.local'
+#   - 'mypublicdomain.org'
 
 # dhcp_subnets:
-#   - network: '192.168.1.0'
+#   - name: 'My network 1'
+#     network: '192.168.1.0'
 #     netmask: '255.255.255.0'
 #     broadcast: '192.168.1.255'
 #     routers: '192.168.1.254'
 #     range: '192.168.1.10 192.168.1.253'
-#     default_lease_time: '600'
+#     domain_name: 'mydomain.local'
+#     domain_search:
+#       - 'mydomain.local'
+#       - 'myotherdomain.local'
+#     nameservers:
+#       - '10.0.0.1'
+#       - '172.16.0.1'
+#     default_lease_time: '3600'
 #     max_lease_time: '7200'
-#   - network: '192.168.1.0'
+#   - name: 'My network 2'
+#     network: '192.168.1.0'
 #     netmask: '255.255.255.0'
 #     broadcast: '192.168.1.255'
 #     routers: '192.168.1.254'
+#     domain_name: 'myotherdomain.local'
+#     domain_search:
+#       - 'myotherdomain.local'
+#       - 'mydomain.local'
+#     nameservers:
+#       - '172.16.0.1'
+#       - '10.0.0.1'
 #     range: '192.168.1.10 192.168.1.253'
-#     default_lease_time: '600'
-#     max_lease_time: '7200'
+#     default_lease_time: '7200'
+#     max_lease_time: '86400'
 
 # dhcp_role: 'standalone|primary|secondary'
 dhcp_role: 'standalone'

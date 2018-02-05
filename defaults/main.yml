@@ -5,9 +5,12 @@ dhcp_packages:
 
 dhcp_default_file: '/etc/default/isc-dhcp-server'
 
+# defaults to these values if undefined
+# dhcp_dhcpd4_config_file: '/etc/dhcp/dhcpd.conf'
+# dhcp_dhcpd6_config_file: '/etc/dhcp/dhcpd6.conf'
+
 # defaults to ansible_default_ipv4['interface'] if undefined
-# dhcp_interfaces:
-#   - 'eth0'
+# dhcp_interfaces: 'eth0 eth1'
 
 # dhcp_ddns_update_style: 'none|interim'
 # default to none if undefined

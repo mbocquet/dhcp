@@ -1,2 +1,6 @@
 ---
 # handlers file for dhcp
+- name: dhcpd restart
+  service:
+    name: 'isc-dhcp-server'
+    state: restarted

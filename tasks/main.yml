@@ -32,15 +32,34 @@
 - name: "Listening interface(s)"
   lineinfile:
     dest: '{{ dhcp_default_file }}'
+    regexp: '^INTERFACESv4=".*"'
     line: "INTERFACESv4=\"{{ dhcp_interfaces | default(ansible_default_ipv4['interface']) }}\""
+  notify:
+    - dhcpd restart
   tags:
     - dhcp
     - interfaces
 
+- name: "DHCPDv4_CONF"
+  # We must change it only if dhcp_dhcpd4_config_file is defined
+  lineinfile:
+    dest: '{{ dhcp_default_file }}'
+    regexp: '.*DHCPDv4_CONF=.*'
+    line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
+  when:
+    - dhcp_dhcpd4_config_file is defined
+  notify:
+    - dhcpd restart
+  tags:
+    - dhcp
+    - v4conf
+
 - name: "Config file"
   template:
-    dest: '/tmp/dhcpd.conf.test'
-    src: 'dhcpd-standalone.conf.j2'
+    dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
+    src: 'dhcpd-{{ dhcp_role }}.conf.j2'
+  notify:
+    - dhcpd restart
   tags:
     - dhcp
     - config

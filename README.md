@@ -14,17 +14,21 @@ Many. See defaults/main.yml for details.
 
 None.
 
+## Install this role as submodule of a git repository
+
+`git submodule add https://github.com/mbocquet/dhcp.git roles/dhcp`
+
 ## Example Playbook
 
     - hosts: servers
       roles:
-        - mbocquet.dhcp
+        - dhcp
 
 or
 
     - hosts: servers
       roles:
-        - { role: mbocquet.dhcp, x: 42 }
+        - { role: dhcp, x: 42 }
 
 ## License
 

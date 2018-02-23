@@ -17,11 +17,23 @@ default-lease-time {{ dhcp_common_default_lease_time }};
 max-lease-time {{ dhcp_common_max_lease_time }};
 {% endif %}
 
-ddns-update-style {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
-{{ dhcp_ddns_update_style|lower() }}
-{% else %}none{% endif %};
+{% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
+include "{{ dns_keyfile }}";
+ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
+{% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
+{{ dhcp_ddns_client_updates }} client-updates;
+{% endif %}
 {% if dhcp_autoritative is defined and dhcp_autoritative|lower() in ['true','yes'] %}
 authoritative;
+{% endif %}
+{% if dns_zones is defined %}
+{% for zone in dns_zones %}
+
+zone {{ zone.name }}. {
+    primary 127.0.0.1;
+    key {{ dns_keyname }};
+}
+{% endfor %}
 {% endif %}
 
 {% for subnet in dhcp_subnets %}

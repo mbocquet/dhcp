@@ -16,8 +16,12 @@ dhcp_default_file: '/etc/default/isc-dhcp-server'
 # default to none if undefined
 # dhcp_ddns_update_style: 'interim'
 
+# dhcp_ddns_client_updates: 'allow|ignore'
+# default to not print this statement if value is not in 'allow','ignore' or undefined.
+# dhcp_ddns_client_updates: 'ignore'
+
 # dhcp_authoritative: 'yes|no|true|false' (case insensitive)
-# default to not print this statement if value is not in 'true','false' or undefined
+# default to not print this statement if value is not in 'true','false' or undefined.
 # dhcp_authoritative: 'true'
 
 # dhcp_common_domain: 'mydomain.local'

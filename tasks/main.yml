@@ -9,26 +9,6 @@
     - dhcp
     - packages
 
-#- name: "Debug 1"
-#  debug:
-#    msg: "{{ item }}"
-#  with_items:
-#    - "{{ dhcp_packages }}"
-#    - "{{ dhcp_domain }}"
-#    - "{{ dhcp_subnets }}"
-#    - "{{ dhcp_interfaces | default('ansible_default_ipv4['interface']') }}"
-##    - "{{ ansible_default_ipv4['interface'] }}"
-#  tags:
-#    - dhcp
-#    - debug
-
-#- name: "Debug"
-#  debug:
-#    msg: "{{ dhcp_interfaces | default(ansible_default_ipv4['interface']) }}"
-#  tags:
-#    - dhcp
-#    - debug
-
 - name: "Listening interface(s)"
   lineinfile:
     dest: '{{ dhcp_default_file }}'
@@ -41,7 +21,6 @@
     - interfaces
 
 - name: "DHCPDv4_CONF"
-  # We must change it only if dhcp_dhcpd4_config_file is defined
   lineinfile:
     dest: '{{ dhcp_default_file }}'
     regexp: '.*DHCPDv4_CONF=.*'

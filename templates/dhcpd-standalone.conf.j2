@@ -18,7 +18,7 @@ max-lease-time {{ dhcp_common_max_lease_time }};
 {% endif %}
 
 {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
-include "{{ dns_keyfile }}";
+include "{{ dhcp_keyfile }}";
 ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
 {% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
 {{ dhcp_ddns_client_updates }} client-updates;

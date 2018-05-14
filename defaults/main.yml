@@ -6,22 +6,31 @@ dhcp_packages:
 dhcp_default_file: '/etc/default/isc-dhcp-server'
 
 # defaults to these values if undefined
+#
 # dhcp_dhcpd4_config_file: '/etc/dhcp/dhcpd.conf'
 # dhcp_dhcpd6_config_file: '/etc/dhcp/dhcpd6.conf'
 
 # defaults to ansible_default_ipv4['interface'] if undefined
+#
 # dhcp_interfaces: 'eth0 eth1'
 
 # dhcp_ddns_update_style: 'none|interim'
 # default to none if undefined
+# 
 # dhcp_ddns_update_style: 'interim'
 
-# dhcp_ddns_client_updates: 'allow|ignore'
-# default to not print this statement if value is not in 'allow','ignore' or undefined.
+# dhcp_keyfile: bind key to use when used with bind. Should be the same value
+# if used in dns role variable dns_keyfile.
+dhcp_keyfile: '/etc/bind/rndc.key'
+
+# dhcp_ddns_client_updates: 'allow|ignore' default to not print this statement
+# if value is not in 'allow','ignore' or undefined.
+#
 # dhcp_ddns_client_updates: 'ignore'
 
-# dhcp_authoritative: 'yes|no|true|false' (case insensitive)
-# default to not print this statement if value is not in 'true','false' or undefined.
+# dhcp_authoritative: 'yes|no|true|false' (case insensitive). default to not
+# print this statement if value is not in 'true','false' or undefined.
+#
 # dhcp_authoritative: 'true'
 
 # dhcp_common_domain: 'mydomain.local'

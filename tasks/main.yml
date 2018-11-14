@@ -1,6 +1,6 @@
 ---
 # tasks file for dhcp
-- name: "Packages"
+- name: "packages"
   package:
     name: "{{ item }}"
   with_items:
@@ -14,6 +14,8 @@
     dest: '{{ dhcp_default_file }}'
     regexp: '^INTERFACESv4=".*"'
     line: "INTERFACESv4=\"{{ dhcp_interfaces | default(ansible_default_ipv4['interface']) }}\""
+  when:
+    - not ansible_check_mode
   notify:
     - dhcpd restart
   tags:
@@ -26,6 +28,7 @@
     regexp: '.*DHCPDv4_CONF=.*'
     line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
   when:
+    - not ansible_check_mode
     - dhcp_dhcpd4_config_file is defined
   notify:
     - dhcpd restart
@@ -33,10 +36,21 @@
     - dhcp
     - v4conf
 
-- name: "Config file"
+- name: "config file"
   template:
-    dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
+    # TODO # dhcpd-primary.conf.j2 and dhcpd-secondary.conf.j2 are the same ! refactorize !
     src: 'dhcpd-{{ dhcp_role }}.conf.j2'
+    dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
+  notify:
+    - dhcpd restart
+  tags:
+    - dhcp
+    - config
+
+- name: "shared config file"
+  template:
+    src: 'dhcpd-shared.conf.j2'
+    dest: "{{ dhcp_failover_shared_config_file }}"
   notify:
     - dhcpd restart
   tags:

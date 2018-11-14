@@ -1,0 +1,35 @@
+# {{ ansible_managed }}
+
+{% if dhcp_autoritative is defined and dhcp_autoritative|lower() in ['true','yes'] %}
+authoritative;
+{% endif %}
+
+log-facility local7;
+
+{% for subnet in dhcp_subnets %}
+# {{ subnet.name }}
+subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
+ pool {
+ failover peer "{{ dhcp_failover_name }}";
+ range {{ subnet.range }};
+{% if subnet.nameservers is defined %}
+ option domain-name-servers {{ subnet.nameservers|join(', ') }};
+{% endif %}
+{% if subnet.domain_name is defined %}
+ option domain-name "{{ subnet.domain_name }}";
+{% endif %}
+{% if subnet.domain_search is defined %}
+ option domain-search {{ subnet.domain_search|join('", "') }};
+{% endif %}
+ option routers {{ subnet.routers }};
+ option broadcast-address {{ subnet.broadcast }};
+{% if subnet.default_lease_time is defined %}
+ default-lease-time {{ subnet.default_lease_time }};
+{% endif %}
+{% if subnet.max_lease_time is defined %}
+ max-lease-time {{ subnet.max_lease_time }};
+{% endif %}
+ }
+}
+{% endfor %}
+

@@ -82,4 +82,10 @@ dhcp_keyfile: '/etc/bind/rndc.key'
 
 # dhcp_role: 'standalone|primary|secondary'
 dhcp_role: 'standalone'
+
+# failover clustername
+dhcp_failover_name: 'DHCP-HA'
+
+# shared config file which must be identical between failover nodes
+dhcp_failover_shared_config_file: '/etc/dhcp/dhcpd.conf.shared'
 ...

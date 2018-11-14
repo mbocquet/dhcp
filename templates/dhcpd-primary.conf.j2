@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+
+server-identifier {{ ansible_fqdn }};
+
+{% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
+# include "{{ dhcp_keyfile }}";
+key "rndc-key" {
+    algorithm hmac-md5;
+    secret "SOOMSWCcGWpxe5/4rvpytQ=="; # TODO extract key name, algo and secret from {{ dhcp_keyfile }}
+}
+
+ddns-updates on;
+ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
+
+{% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
+{{ dhcp_ddns_client_updates }} client-updates;
+update-static-leases on;
+
+{% if dns_zones is defined %}
+{% for zone in dns_zones %}
+zone {{ zone.name }}. {
+    primary {% if dhcp_role == 'primary' %}localhost;{% else %}{{ hostvars[dhcp_primary].ansible_default_ipv4.address }};
+{% endif %}
+    key {{ dns_keyname }};
+}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+failover peer "{{ dhcp_failover_name }}" {
+  {{ dhcp_role }};
+  {% if dhcp_role == 'primary' %}split 128{% else %}#{% endif %}; # TODO variabilize split
+  mclt 3600; # Maximum Client Lead Time # TODO variabilize mctl
+  address {{ ansible_default_ipv4.address }};
+  port 519;
+  peer address {% for dhcp in ansible_play_hosts %}{% if hostvars[dhcp].ansible_default_ipv4.address != ansible_default_ipv4.address %}{{ hostvars[dhcp].ansible_default_ipv4.address }};
+{% endif %}
+{% endfor %}
+  peer port 519;                # connect to peer on this port
+  max-response-delay 60;        # how many seconds to wait for answer from peer
+  max-unacked-updates 10;       # how often to try to contact the failover peer
+  load balance max seconds 3;   # a cutoff after which load balancing is disabled
+}
+
+include "{{ dhcp_failover_shared_config_file }}";

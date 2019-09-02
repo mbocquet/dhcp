@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+# {{ ansible_managed }}. role: dhcp, file: dhcpd-shared.conf.j2
 
 {% if dhcp_autoritative is defined and dhcp_autoritative|lower() in ['true','yes'] %}
 authoritative;

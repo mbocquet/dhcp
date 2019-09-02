@@ -1,6 +1,6 @@
-# {{ ansible_managed }}
+# {{ ansible_managed }}. role: dhcp, file: dhcpd-secondary.conf.j2
 
-server-identifier {{ ansible_fqdn }};
+server-identifier {{ ansible_hostname }};
 
 {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
 # include "{{ dhcp_keyfile }}";

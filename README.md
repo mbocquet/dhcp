@@ -1,6 +1,6 @@
 # dhcp
 
-Ansible role to handle DHCP server(s).
+Ansible role to install and configure ISC DHCP server(s).
 
 ## Requirements
 
@@ -16,7 +16,7 @@ None.
 
 ## Install this role as submodule of a git repository
 
-`git submodule add https://github.com/mbocquet/dhcp.git roles/dhcp`
+`git submodule add https://git.sekoya.org/mb/dhcp.git roles/dhcp`
 
 ## Example Playbook
 

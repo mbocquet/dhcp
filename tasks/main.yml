@@ -1,15 +1,14 @@
 ---
 # tasks file for dhcp
-- name: "packages"
+- name: package
   package:
-    name: "{{ item }}"
-  with_items:
-    - "{{ dhcp_packages }}"
+    name: "{{ dhcp_packages }}"
+    force_apt_get: yes
   tags:
     - dhcp
-    - packages
+    - package
 
-- name: "Listening interface(s)"
+- name: "listening interface(s)"
   lineinfile:
     dest: '{{ dhcp_default_file }}'
     regexp: '^INTERFACESv4=".*"'
@@ -22,7 +21,7 @@
     - dhcp
     - interfaces
 
-- name: "DHCPDv4_CONF"
+- name: DHCPDv4_CONF
   lineinfile:
     dest: '{{ dhcp_default_file }}'
     regexp: '.*DHCPDv4_CONF=.*'
@@ -36,7 +35,7 @@
     - dhcp
     - v4conf
 
-- name: "config file"
+- name: config
   template:
     # TODO # dhcpd-primary.conf.j2 and dhcpd-secondary.conf.j2 are the same ! refactorize !
     src: 'dhcpd-{{ dhcp_role }}.conf.j2'
@@ -47,7 +46,7 @@
     - dhcp
     - config
 
-- name: "shared config file"
+- name: shared config
   template:
     src: 'dhcpd-shared.conf.j2'
     dest: "{{ dhcp_failover_shared_config_file }}"

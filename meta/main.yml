@@ -1,7 +1,9 @@
 galaxy_info:
   author: Mathias BOCQUET
-  description: Install and configure ISC DHCP server(s)
-  company: Sekoya.org
+  description: Ansible role to install and configure ISC DHCP server(s)
+  company: Sekoya.org (http://www.sekoya.org)
+
+  issue_tracker_url: https://git.sekoya.org/mb/dhcp/issues
 
   license: GPLv3
 

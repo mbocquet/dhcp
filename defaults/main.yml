@@ -16,7 +16,7 @@ dhcp_default_file: '/etc/default/isc-dhcp-server'
 
 # dhcp_ddns_update_style: 'none|interim'
 # default to none if undefined
-# 
+#
 # dhcp_ddns_update_style: 'interim'
 
 # dhcp_keyfile: bind key to use when used with bind. Should be the same value
@@ -41,7 +41,7 @@ dhcp_keyfile: '/etc/bind/rndc.key'
 # IP Addresses, not FQDNs of common nameservers
 # dhcp_common_nameservers:
 #   - '10.0.0.1'
-#   - '172.16.0.1' 
+#   - '172.16.0.1'
 
 # dhcp_common_domainsearch:
 #   - 'mydomain.local'

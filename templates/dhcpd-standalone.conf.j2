@@ -1,4 +1,4 @@
-# {{ ansible_managed }}. role: dhcp, file: dhcpd-standalone.conf.j2
+# {{ ansible_managed }}. role: {{ role_name }}, template: dhcpd-standalone.conf.j2
 
 {% if dhcp_common_domain is defined %}
 option domain-name "{{ dhcp_common_domain }}";
@@ -57,6 +57,14 @@ subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
 {% if subnet.max_lease_time is defined %}
  max-lease-time {{ subnet.max_lease_time }};
 {% endif %}
+{% if subnet.static_leases is defined %}
+{% for lease in subnet.static_leases %}
+ host {{ lease.host }} {
+  hardware ethernet {{ lease.ethernet_address }};
+  fixed-address {{ lease.fixed_address }};
+  }
+{% endfor %}
+{% endif %}}
 }
 
 {% endfor %}

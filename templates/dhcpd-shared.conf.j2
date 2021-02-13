@@ -6,6 +6,13 @@ authoritative;
 
 log-facility local7;
 
+{% if dhcp_common_default_lease_time is defined %}
+default-lease-time {{ dhcp_common_default_lease_time }};
+{% endif %}
+{% if dhcp_common_max_lease_time is defined %}
+max-lease-time {{ dhcp_common_max_lease_time }};
+{% endif %}
+
 {% for subnet in dhcp_subnets %}
 # {{ subnet.name }}
 subnet {{ subnet.network }} netmask {{ subnet.netmask }} {

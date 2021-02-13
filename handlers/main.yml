@@ -4,3 +4,4 @@
   service:
     name: 'isc-dhcp-server'
     state: restarted
+  throttle: 1

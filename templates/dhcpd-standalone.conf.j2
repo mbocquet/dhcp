@@ -19,52 +19,55 @@ max-lease-time {{ dhcp_common_max_lease_time }};
 
 {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
 include "{{ dhcp_keyfile }}";
+
+ddns-updates on;
 ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
 {% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
 {{ dhcp_ddns_client_updates }} client-updates;
 {% endif %}
-{% if dhcp_autoritative is defined and dhcp_autoritative|lower() in ['true','yes'] %}
+{% if dhcp_autoritative %}
 authoritative;
 {% endif %}
 {% if dns_zones is defined %}
 {% for zone in dns_zones %}
 
 zone {{ zone.name }}. {
-    primary 127.0.0.1;
-    key {{ dns_keyname }};
+  primary 127.0.0.1;
+  key {{ dhcp_keyname }};
 }
 {% endfor %}
 {% endif %}
 
 {% for subnet in dhcp_subnets %}
-# {{ subnet.name }}
+
+{% if subnet.name is defined %}# {{ subnet.name }}
+{% endif %}
 subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
- range {{ subnet.range }};
+  range {{ subnet.range }};
 {% if subnet.nameservers is defined %}
- option domain-name-servers "{{ subnet.nameservers|join('", "') }}";
+  option domain-name-servers "{{ subnet.nameservers|join('", "') }}";
 {% endif %}
 {% if subnet.domain_name is defined %}
- option domain-name "{{ subnet.domain_name }}";
+  option domain-name "{{ subnet.domain_name }}";
 {% endif %}
 {% if subnet.domain_search is defined %}
- option domain-search "{{ subnet.domain_search|join('", "') }}";
+  option domain-search "{{ subnet.domain_search|join('", "') }}";
 {% endif %}
- option routers {{ subnet.routers }};
- option broadcast-address {{ subnet.broadcast }};
+  option routers {{ subnet.routers }};
+  option broadcast-address {{ subnet.broadcast }};
 {% if subnet.default_lease_time is defined %}
- default-lease-time {{ subnet.default_lease_time }};
+  default-lease-time {{ subnet.default_lease_time }};
 {% endif %}
 {% if subnet.max_lease_time is defined %}
- max-lease-time {{ subnet.max_lease_time }};
+  max-lease-time {{ subnet.max_lease_time }};
 {% endif %}
 {% if subnet.static_leases is defined %}
 {% for lease in subnet.static_leases %}
- host {{ lease.host }} {
-  hardware ethernet {{ lease.ethernet_address }};
-  fixed-address {{ lease.fixed_address }};
+  host {{ lease.host }} {
+    hardware ethernet {{ lease.ethernet_address }};
+    fixed-address {{ lease.fixed_address }};
   }
 {% endfor %}
 {% endif %}
 }
-
 {% endfor %}

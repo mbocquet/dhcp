@@ -36,7 +36,6 @@
 
 - name: config
   template:
-    # TODO # dhcpd-primary.conf.j2 and dhcpd-secondary.conf.j2 are the same ! refactorize !
     src: 'dhcpd-{{ dhcp_role }}.conf.j2'
     dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
   notify:
@@ -51,7 +50,9 @@
     dest: "{{ dhcp_failover_shared_config_file }}"
   notify:
     - dhcpd restart
+  when: dhcp_failover_shared_config_file is defined
   tags:
     - dhcp
     - config
+    - shared
 ...

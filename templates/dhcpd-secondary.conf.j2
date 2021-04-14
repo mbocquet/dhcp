@@ -1,36 +1,34 @@
-# {{ ansible_managed }}. role: dhcp, file: dhcpd-secondary.conf.j2
+# {{ ansible_managed }}. role: {{ role_name }}, file: dhcpd-secondary.conf.j2
 
 server-identifier {{ ansible_hostname }};
 
 {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
-# include "{{ dhcp_keyfile }}";
-key "rndc-key" {
-    algorithm hmac-md5;
-    secret "SOOMSWCcGWpxe5/4rvpytQ=="; # TODO extract key name, algo and secret from {{ dhcp_keyfile }}
-}
+include "{{ dhcp_keyfile }}";
 
 ddns-updates on;
 ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
-
 {% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
 {{ dhcp_ddns_client_updates }} client-updates;
+{% endif %}
 update-static-leases on;
 
 {% if dns_zones is defined %}
 {% for zone in dns_zones %}
+
 zone {{ zone.name }}. {
-    primary {% if dhcp_role == 'primary' %}localhost;{% else %}{{ hostvars[dhcp_primary].ansible_default_ipv4.address }};
+  primary {% if dhcp_role == 'primary' %}localhost;
+{% else %}{{ hostvars[dhcp_primary].ansible_default_ipv4.address }};
 {% endif %}
-    key {{ dns_keyname }};
+  key {{ dhcp_keyname }};
 }
 {% endfor %}
 {% endif %}
-{% endif %}
-
 failover peer "{{ dhcp_failover_name }}" {
   {{ dhcp_role }};
-  {% if dhcp_role == 'primary' %}split 128{% else %}#{% endif %}; # TODO variabilize split
-  mclt 3600; # Maximum Client Lead Time # TODO variabilize mctl
+{% if dhcp_role == 'primary' %}
+  split 128;                    # load balancing threshold (should be 128)
+{% endif %}
+  mclt 3600;                    # Maximum Client Lead Time
   address {{ ansible_default_ipv4.address }};
   port 519;
   peer address {% for dhcp in ansible_play_hosts %}{% if hostvars[dhcp].ansible_default_ipv4.address != ansible_default_ipv4.address %}{{ hostvars[dhcp].ansible_default_ipv4.address }};

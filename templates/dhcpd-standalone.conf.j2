@@ -25,7 +25,7 @@ ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-styl
 {% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
 {{ dhcp_ddns_client_updates }} client-updates;
 {% endif %}
-{% if dhcp_autoritative %}
+{% if dhcp_authoritative %}
 authoritative;
 {% endif %}
 {% if dns_zones is defined %}

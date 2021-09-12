@@ -7,11 +7,13 @@
     - dhcp
     - package
 
-- name: "listening interface(s)"
+- name: interfaces
   lineinfile:
     dest: '{{ dhcp_default_file }}'
     regexp: '^INTERFACESv4=".*"'
-    line: "INTERFACESv4=\"{{ dhcp_interfaces | default(ansible_default_ipv4['interface']) }}\""
+    line:
+      INTERFACESv4=
+      {{ dhcp_interfaces | default(ansible_default_ipv4.interface) }}
   when:
     - not ansible_check_mode
   notify:

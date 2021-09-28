@@ -45,7 +45,7 @@ zone {{ zone.name }}. {
 subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
   range {{ subnet.range }};
 {% if subnet.nameservers is defined %}
-  option domain-name-servers "{{ subnet.nameservers|join('", "') }}";
+  option domain-name-servers {{ subnet.nameservers|join(', ') }};
 {% endif %}
 {% if subnet.domain_name is defined %}
   option domain-name "{{ subnet.domain_name }}";

@@ -19,7 +19,7 @@ subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
     failover peer "{{ dhcp_failover_name }}";
     range {{ subnet.range }};
 {% if subnet.nameservers is defined %}
-    option domain-name-servers "{{ subnet.nameservers|join(', ') }}";
+    option domain-name-servers {{ subnet.nameservers|join(', ') }};
 {% endif %}
 {% if subnet.domain_name is defined %}
     option domain-name "{{ subnet.domain_name }}";

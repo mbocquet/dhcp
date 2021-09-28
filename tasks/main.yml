@@ -12,10 +12,8 @@
     dest: '{{ dhcp_default_file }}'
     regexp: '^INTERFACESv4=".*"'
     line:
-      INTERFACESv4=
-      {{ dhcp_interfaces | default(ansible_default_ipv4.interface) }}
-  when:
-    - not ansible_check_mode
+      'INTERFACESv4="{{ dhcp_interfaces |
+      default(ansible_default_ipv4.interface) }}"'
   notify:
     - dhcpd restart
   tags:
@@ -28,7 +26,6 @@
     regexp: '.*DHCPDv4_CONF=.*'
     line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
   when:
-    - not ansible_check_mode
     - dhcp_dhcpd4_config_file is defined
   notify:
     - dhcpd restart
@@ -57,4 +54,3 @@
     - dhcp
     - config
     - shared
-...

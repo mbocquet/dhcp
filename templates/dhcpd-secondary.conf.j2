@@ -4,14 +4,7 @@ server-identifier {{ ansible_hostname }};
 
 {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
 include "{{ dhcp_keyfile }}";
-
-ddns-updates on;
-ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
-{% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
-{{ dhcp_ddns_client_updates }} client-updates;
 {% endif %}
-update-static-leases on;
-
 {% if dns_zones is defined %}
 {% for zone in dns_zones %}
 
@@ -23,6 +16,7 @@ zone {{ zone.name }}. {
 }
 {% endfor %}
 {% endif %}
+
 failover peer "{{ dhcp_failover_name }}" {
   {{ dhcp_role }};
 {% if dhcp_role == 'primary' %}

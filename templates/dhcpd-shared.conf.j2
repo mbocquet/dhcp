@@ -38,6 +38,9 @@ subnet {{ subnet.network }} netmask {{ subnet.netmask }} {
 {% if subnet.domain_search is defined %}
     option domain-search "{{ subnet.domain_search|join('", "') }}";
 {% endif %}
+{% if subnet.ntp_servers is defined %}
+    option ntp-servers {{ subnet.ntp_servers|join(', ') }};
+{% endif %}
     option routers {{ subnet.routers }};
     option broadcast-address {{ subnet.broadcast }};
 {% if subnet.default_lease_time is defined %}

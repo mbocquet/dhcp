@@ -22,7 +22,7 @@ include "{{ dhcp_keyfile }}";
 
 ddns-updates on;
 ddns-update-style {{ dhcp_ddns_update_style|lower() }}{% else %}ddns-update-style none{% endif %};
-{% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','ignore'] %}
+{% if dhcp_ddns_client_updates is defined and dhcp_ddns_client_updates|lower() in ['allow','deny','ignore'] %}
 {{ dhcp_ddns_client_updates }} client-updates;
 {% endif %}
 {% if dhcp_authoritative %}

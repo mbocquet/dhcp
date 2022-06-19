@@ -37,6 +37,7 @@
   template:
     src: 'dhcpd-{{ dhcp_role }}.conf.j2'
     dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
+    mode: 0644
   notify:
     - dhcpd restart
   tags:
@@ -47,6 +48,7 @@
   template:
     src: 'dhcpd-shared.conf.j2'
     dest: "{{ dhcp_failover_shared_config_file }}"
+    mode: 0644
   notify:
     - dhcpd restart
   when: dhcp_failover_shared_config_file is defined

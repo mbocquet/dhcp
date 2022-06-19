@@ -1,54 +1,57 @@
 ---
 # defaults file for dhcp
 dhcp_packages:
-  - 'isc-dhcp-server'
+  - isc-dhcp-server
 
-dhcp_default_file: '/etc/default/isc-dhcp-server'
+dhcp_default_file: /etc/default/isc-dhcp-server
 
 # defaults to these values if undefined
 #
-# dhcp_dhcpd4_config_file: '/etc/dhcp/dhcpd.conf'
-# dhcp_dhcpd6_config_file: '/etc/dhcp/dhcpd6.conf'
+# dhcp_dhcpd4_config_file: /etc/dhcp/dhcpd.conf
+# dhcp_dhcpd6_config_file: /etc/dhcp/dhcpd6.conf
 
 # defaults to ansible_default_ipv4['interface'] if undefined
 #
 # dhcp_interfaces: 'eth0 eth1'
 
-# dhcp_ddns_update_style: 'none|interim'
+# dhcp_ddns_update_style: none|interim
 # default to none if undefined
 #
-# dhcp_ddns_update_style: 'interim'
+# dhcp_ddns_update_style: interim
 
 # dhcp_keyfile: bind key to use when used with bind. Should be the same value
 # if used in dns role variable dns_keyfile.
-dhcp_keyfile: '/etc/bind/rndc.key'
+dhcp_keyfile: /etc/bind/rndc.key
 
 # dhcp_keyname: bind key name. Should be the same name as dns_keyname used in
 # dns role.
-dhcp_keyname: 'rndc-key'
+dhcp_keyname: rndc-key
 
-# dhcp_ddns_client_updates: 'allow|ignore' default to not print this statement
-# if value is not in 'allow','ignore' or undefined.
+# dhcp_ddns_client_updates: 'allow|deny|ignore' default to not print this
+# statement if value is not in 'allow|deny|ignore' or undefined.
 #
-# dhcp_ddns_client_updates: 'ignore'
+# dhcp_ddns_client_updates: ignore
+
+# dhcp_ddns_update_static_leases: 'on|off'
+# dhcp_ddns_update_static_leases: 'on'
 
 # dhcp_authoritative: true|false
 # dhcp_authoritative: true
 
-# dhcp_common_domain: 'mydomain.local'
+# dhcp_common_domain: mydomain.local
 
-# dhcp_common_default_lease_time: '600'
-# dhcp_common_max_lease_time: '7200'
+# dhcp_common_default_lease_time: 600
+# dhcp_common_max_lease_time: 7200
 
 # IP Addresses, not FQDNs of common nameservers
 # dhcp_common_nameservers:
-#   - '10.0.0.1'
-#   - '172.16.0.1'
+#   - 10.0.0.1
+#   - 172.16.0.1
 
 # dhcp_common_domainsearch:
-#   - 'mydomain.local'
-#   - 'myotherdomain.local'
-#   - 'mypublicdomain.org'
+#   - mydomain.local
+#   - myotherdomain.local
+#   - mypublicdomain.org
 
 # dhcp_subnets:
 #   - name: 'My network 1'
@@ -83,19 +86,18 @@ dhcp_keyname: 'rndc-key'
 #     max_lease_time: '86400'
 #     static_leases:
 #       - host: vixie
-#         ethernet_address: 0b:50:aa:7e:34:5c
+#         ethernet_address: '0b:50:aa:7e:34:5c'
 #         fixed_address: 192.168.1.9
 #       - host: voxie
-#         ethernet_address: 0b:50:aa:7e:34:5d
+#         ethernet_address: '0b:50:aa:7e:34:5d'
 #         fixed_address: 192.168.1.10
 
 # dhcp_role: 'standalone|primary|secondary'
 # If not standalone, variables dhcp_failover_* below must be defined somewhere.
-dhcp_role: 'standalone'
+dhcp_role: standalone
 
 # failover clustername
-# dhcp_failover_name: 'DHCP-HA'
+# dhcp_failover_name: DHCP-HA
 
 # shared config file which should stay synced between failover nodes
-# dhcp_failover_shared_config_file: '/etc/dhcp/dhcpd.conf.shared'
-...
+# dhcp_failover_shared_config_file: /etc/dhcp/dhcpd.conf.shared

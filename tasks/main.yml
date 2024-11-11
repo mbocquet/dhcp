@@ -7,52 +7,63 @@
     - dhcp
     - package
 
-- name: interfaces
-  lineinfile:
-    dest: '{{ dhcp_default_file }}'
-    regexp: '^INTERFACESv4=".*"'
-    line:
-      'INTERFACESv4="{{ dhcp_interfaces |
-      default(ansible_default_ipv4.interface) }}"'
-  notify:
-    - dhcpd restart
+- name: Service facts
+  ansible.builtin.service_facts:
   tags:
     - dhcp
-    - interfaces
+    - facts
 
-- name: DHCPDv4_CONF
-  lineinfile:
-    dest: '{{ dhcp_default_file }}'
-    regexp: '.*DHCPDv4_CONF=.*'
-    line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
+- name: Configuration
   when:
-    - dhcp_dhcpd4_config_file is defined
-  notify:
-    - dhcpd restart
-  tags:
-    - dhcp
-    - v4conf
+    - "'isc-dhcp-server.service' in services"
+  block:
+    - name: interfaces
+      lineinfile:
+        dest: '{{ dhcp_default_file }}'
+        regexp: '^INTERFACESv4=".*"'
+        line:
+          'INTERFACESv4="{{ dhcp_interfaces |
+          default(ansible_default_ipv4.interface) }}"'
+      notify:
+        - dhcpd restart
+      tags:
+        - dhcp
+        - interfaces
 
-- name: config
-  template:
-    src: 'dhcpd-{{ dhcp_role }}.conf.j2'
-    dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
-    mode: 0644
-  notify:
-    - dhcpd restart
-  tags:
-    - dhcp
-    - config
+    - name: DHCPDv4_CONF
+      lineinfile:
+        dest: '{{ dhcp_default_file }}'
+        regexp: '.*DHCPDv4_CONF=.*'
+        line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
+      when:
+        - dhcp_dhcpd4_config_file is defined
+      notify:
+        - dhcpd restart
+      tags:
+        - dhcp
+        - v4conf
 
-- name: shared config
-  template:
-    src: 'dhcpd-shared.conf.j2'
-    dest: "{{ dhcp_failover_shared_config_file }}"
-    mode: 0644
-  notify:
-    - dhcpd restart
-  when: dhcp_failover_shared_config_file is defined
-  tags:
-    - dhcp
-    - config
-    - shared
+    - name: config
+      template:
+        src: 'dhcpd-{{ dhcp_role }}.conf.j2'
+        dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
+        mode: 0644
+      notify:
+        - dhcpd restart
+      tags:
+        - dhcp
+        - config
+
+    - name: shared config
+      template:
+        src: 'dhcpd-shared.conf.j2'
+        dest: "{{ dhcp_failover_shared_config_file }}"
+        mode: 0644
+      notify:
+        - dhcpd restart
+      when:
+        - dhcp_role in [ 'primary', 'secondary' ]
+      tags:
+        - dhcp
+        - config
+        - shared

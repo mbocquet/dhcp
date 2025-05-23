@@ -1,4 +1,4 @@
-# {{ ansible_managed }}. role: {{ role_name }}, template: dhcpd-shared.conf.j2
+# Ansible managed. role: {{ role_name }}, template: dhcpd-shared.conf.j2
 
 {% if dhcp_ddns_update_style is defined and dhcp_ddns_update_style|lower() in ['interim'] %}
 ddns-domainname "{{ dhcp_ddns_domainname }}";

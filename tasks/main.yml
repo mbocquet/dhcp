@@ -1,6 +1,6 @@
 ---
 # tasks file for dhcp
-- name: package
+- name: Package
   ansible.builtin.package:
     name: "{{ dhcp_packages }}"
   tags:
@@ -17,7 +17,7 @@
   when:
     - "'isc-dhcp-server.service' in services"
   block:
-    - name: interfaces
+    - name: Interfaces
       ansible.builtin.lineinfile:
         dest: '{{ dhcp_default_file }}'
         regexp: '^INTERFACESv4=".*"'
@@ -43,7 +43,7 @@
         - dhcp
         - v4conf
 
-    - name: config
+    - name: Config
       ansible.builtin.template:
         src: 'dhcpd-{{ dhcp_role }}.conf.j2'
         dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
@@ -54,7 +54,7 @@
         - dhcp
         - config
 
-    - name: shared config
+    - name: Shared config
       ansible.builtin.template:
         src: 'dhcpd-shared.conf.j2'
         dest: "{{ dhcp_failover_shared_config_file }}"

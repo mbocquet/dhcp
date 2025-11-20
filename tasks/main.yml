@@ -20,10 +20,10 @@
     - name: Interfaces
       ansible.builtin.lineinfile:
         dest: "{{ dhcp_default_file }}"
-        regexp: '^INTERFACESv4=".*"'
+        regexp: ^INTERFACESv4=".*"
         line:
-          'INTERFACESv4="{{ dhcp_interfaces |
-          default(ansible_default_ipv4.interface) }}"'
+          INTERFACESv4="{{ dhcp_interfaces |
+          default(ansible_default_ipv4.interface) }}"
       notify:
         - Restart dhcpd
       tags:
@@ -33,7 +33,7 @@
     - name: DHCPDv4_CONF
       ansible.builtin.lineinfile:
         dest: "{{ dhcp_default_file }}"
-        regexp: '.*DHCPDv4_CONF=.*'
+        regexp: .*DHCPDv4_CONF=.*
         line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
       when:
         - dhcp_dhcpd4_config_file is defined

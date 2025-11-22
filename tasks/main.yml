@@ -34,7 +34,7 @@
       ansible.builtin.lineinfile:
         dest: "{{ dhcp_default_file }}"
         regexp: .*DHCPDv4_CONF=.*
-        line: "DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}"
+        line: DHCPDv4_CONF={{ dhcp_dhcpd4_config_file }}
       when:
         - dhcp_dhcpd4_config_file is defined
       notify:
@@ -45,7 +45,7 @@
 
     - name: Config
       ansible.builtin.template:
-        src: "dhcpd-{{ dhcp_role }}.conf.j2"
+        src: dhcpd-{{ dhcp_role }}.conf.j2
         dest: "{{ dhcp_dhcpd4_config_file | default('/etc/dhcp/dhcpd.conf') }}"
         mode: "0644"
       notify:
@@ -56,7 +56,7 @@
 
     - name: Shared config
       ansible.builtin.template:
-        src: "dhcpd-shared.conf.j2"
+        src: dhcpd-shared.conf.j2
         dest: "{{ dhcp_failover_shared_config_file }}"
         mode: "0644"
       notify:

@@ -15,7 +15,7 @@
 
 - name: Configuration
   when:
-    - "'isc-dhcp-server.service' in services"
+    - "'isc-dhcp-server.service' in ansible_facts.services"
   block:
     - name: Interfaces
       ansible.builtin.lineinfile:
